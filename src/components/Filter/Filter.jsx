@@ -1,20 +1,15 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
+// import PropTypes from "prop-types";
+import { /*connect*/ useSelector, useDispatch } from "react-redux";
+import contactsActions from "redux/contacts/contactsActions";
 import { nanoid } from "nanoid";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { InputContainer, Input, Label } from "./Filter.styled";
+import { getFilter } from "redux/contacts/contactsSelectors";
 
-export const Filter = ({ onChange }) => {
-  const [value, setValue] = useState("");
-
+const Filter = (/*{ value, onChange }*/) => {
   const filterInputId = nanoid();
-
-  const handleChange = (e) => {
-    const { value } = e.target;
-
-    setValue(value);
-    onChange(value);
-  };
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -23,7 +18,9 @@ export const Filter = ({ onChange }) => {
           id={filterInputId}
           type="text"
           value={value}
-          onChange={handleChange}
+          onChange={(e) =>
+            dispatch(contactsActions.changeFilter(e.target.value))
+          }
           placeholder="Dmitry"
         />
         <Label htmlFor={filterInputId}>
@@ -35,44 +32,18 @@ export const Filter = ({ onChange }) => {
   );
 };
 
-// export class Filter extends Component {
-//   state = {
-//     value: '',
-//   }
+// Filter.propTypes = {
+//   value: PropTypes.string.isRequired,
+//   onChange: PropTypes.func.isRequired,
+// };
 
-//   filterInputId = nanoid()
+// const mapStateToProps = (state) => ({
+//   value: state.contacts.filter,
+// });
 
-//   handleChange = (e) => {
-//     const { value } = e.target
+// const mapDispatchToProps = (dispatch) => ({
+//   onChange: (e) => dispatch(contactsActions.changeFilter(e.target.value)),
+// });
 
-//     this.setState({ value })
-//     this.props.onChange(value)
-//   }
-
-//   render() {
-//     const { value } = this.state
-
-//     return (
-//       <>
-//         <InputContainer>
-//           <Input
-//             id={this.filterInputId}
-//             type="text"
-//             value={value}
-//             onChange={this.handleChange}
-//             placeholder="Dmitry"
-//           />
-//           <Label htmlFor={this.filterInputId}>
-//             <AiOutlineFileSearch size="30" />
-//             Find contacts by name
-//           </Label>
-//         </InputContainer>
-//       </>
-//     )
-//   }
-// }
-
-Input.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+// export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;
